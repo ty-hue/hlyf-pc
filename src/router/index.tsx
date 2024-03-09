@@ -71,3 +71,8 @@ const router = createBrowserRouter([
 ])
 
 export default router
+
+export const HOME_PATHNAME = '/'
+export const LOGIN_PATHNAME = '/login'
+export const MANAGER_INDEX_PATHNAME = '/manager/list'
+export const REGISTER_PATHNAME = '/register'

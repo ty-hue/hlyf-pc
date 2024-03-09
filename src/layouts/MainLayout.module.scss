@@ -1,0 +1,16 @@
+.container_wrap{  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  .wrap_header{
+    background: skyblue;
+    height: 64px;
+  }
+  .wrap_content{
+    flex: 1;
+  }
+  .wrap_footer{
+    background: green;
+    height: 50px;
+  }
+}
