@@ -1,0 +1,13 @@
+.container_wrap{
+  padding: 24px 0;
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  .wrap_left{
+     width: 120px;
+  }
+  .wrap_right{
+     flex: 1;
+     margin-left: 60px;
+  }
+}
