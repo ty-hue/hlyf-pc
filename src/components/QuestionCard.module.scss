@@ -1,0 +1,29 @@
+.container_wrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+  background: white;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  &:hover{
+    box-shadow: 30px 30px 30px -10px rgba(0,0,0,0.15);
+  }
+  .wrap_header{
+    display: flex;
+    justify-content: space-between;
+    .wrap_header_left{
+      color: black;
+      font-weight: 900;
+    }
+    .wrap_header_right{
+      font-size: 12px;
+      color: black;
+      font-weight: 700;
+    }
+  }
+  .wrap_footer{
+    display: flex;
+    justify-content: space-between;
+  }
+}

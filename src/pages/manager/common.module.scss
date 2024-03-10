@@ -1,0 +1,21 @@
+.container_wrap{
+  display: flex;
+  flex-direction: column;
+  .wrap_header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    .wrap_header_left{
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .wrap_header_right{
+    }
+  }
+  .wrap_content{
+     flex: 1;
+  }
+  .wrap_footer{
+  }
+}
