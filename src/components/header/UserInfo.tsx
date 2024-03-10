@@ -19,7 +19,7 @@ const UserInfo: FC = () => {
   )
   const leave = (
     <Link to={LOGIN_PATHNAME} className={styles.leave}>
-      登陆/注册
+      登陆
     </Link>
   )
   return <div className={styles.userinfo_body}>{isLogin ? online : leave}</div>
