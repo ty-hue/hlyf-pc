@@ -1,8 +1,10 @@
 import { useTitle } from 'ahooks'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import styles from './common.module.scss'
 import QuestionCard from '../../components/QuestionCard'
 import { Empty } from 'antd'
+import ListSearch from '../../components/ListSearch'
+import { useSearchParams } from 'react-router-dom'
 
 const List: FC = () => {
   const questionList = [
@@ -32,11 +34,18 @@ const List: FC = () => {
     },
   ]
   useTitle('我的问卷-问卷列表')
+
+  const [pramams] = useSearchParams()
+  useEffect(() => {
+    console.log(pramams)
+  }, [pramams])
   return (
     <div className={styles.container_wrap}>
       <div className={styles.wrap_header}>
         <div className={styles.wrap_header_left}>我的问卷</div>
-        <div className={styles.wrap_header_right}>搜索框</div>
+        <div className={styles.wrap_header_right}>
+          <ListSearch />
+        </div>
       </div>
       <div className={styles.wrap_content}>
         {questionList.length === 0 && <Empty description="暂无数据" />}
