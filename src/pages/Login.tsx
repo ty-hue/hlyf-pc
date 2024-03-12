@@ -6,6 +6,7 @@ import { REGISTER_PATHNAME } from '../router'
 import ValidateTip from '../components/ValidateTip'
 import styles from './Login.module.scss'
 import { PASSWORD_KEY, USERNAME_KEY } from '../constant'
+import axios from 'axios'
 const Login: FC = () => {
   useTitle('幻庐问卷-登陆')
   const onFinish = (values: any) => {
@@ -36,6 +37,7 @@ const Login: FC = () => {
   }
   const [form] = Form.useForm()
   useEffect(() => {
+    axios.get('/api/test')
     const { username, password } = getLocastorage()
     form.setFieldsValue({ username, password })
   }, [])
