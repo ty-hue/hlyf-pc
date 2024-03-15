@@ -1,13 +1,13 @@
 .container_wrap{  
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   height: 100vh;
   .wrap_header{
     background: skyblue;
     height: 64px;
   }
   .wrap_content{
-    flex: 1;
+    min-height: calc(100vh - 64px - 50px);
     background: #F1FAFA;
   }
   .wrap_footer{

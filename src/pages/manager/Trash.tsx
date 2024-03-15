@@ -1,36 +1,12 @@
 import { useTitle } from 'ahooks'
 import React, { FC, useState } from 'react'
 import styles from './common.module.scss'
-import { Empty, Space, Table, Tag, Button, Modal, message } from 'antd'
+import { Empty, Space, Table, Tag, Button, Modal, message, Spin } from 'antd'
 import ListSearch from '../../components/ListSearch'
+import useLoadingQuestionList from '../../hooks/useLoadingQuestionList'
 const { confirm } = Modal
 const Trash: FC = () => {
-  const questionList = [
-    {
-      _id: '1',
-      title: '问卷1',
-      isStar: true,
-      isPublished: true,
-      answerCount: 35,
-      createdAt: '2024-02-22 19:00:00',
-    },
-    {
-      _id: '2',
-      title: '问卷2',
-      isStar: false,
-      isPublished: true,
-      answerCount: 24,
-      createdAt: '2024-02-21 19:00:00',
-    },
-    {
-      _id: '3',
-      title: '问卷3',
-      isStar: true,
-      isPublished: false,
-      answerCount: 56,
-      createdAt: '2024-02-11 17:00:00',
-    },
-  ]
+  const { list, loading, total } = useLoadingQuestionList({ isDeleted: true })
   const tableColumns = [
     {
       title: '标题',
@@ -52,13 +28,13 @@ const Trash: FC = () => {
     },
   ]
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loadingBtn, setLoadingBtn] = useState(false)
   const restore = () => {
-    setLoading(true)
+    setLoadingBtn(true)
     // ajax request after empty completing
     setTimeout(() => {
       setSelectedRowKeys([])
-      setLoading(false)
+      setLoadingBtn(false)
     }, 1000)
   }
   const del = () => {
@@ -86,36 +62,43 @@ const Trash: FC = () => {
           <ListSearch />
         </div>
       </div>
-      <div className={styles.wrap_content}>
-        {questionList.length === 0 && <Empty description="暂无数据" />}
-        {questionList.length > 0 && (
-          <>
-            <div style={{ textAlign: 'left' }}>
-              <Space>
-                <Button
-                  type="default"
-                  onClick={restore}
-                  loading={loading}
-                  disabled={selectedRowKeys.length === 0}
-                >
-                  恢复
-                </Button>
-                <Button type="primary" onClick={del} disabled={selectedRowKeys.length === 0}>
-                  彻底删除
-                </Button>
-              </Space>
-            </div>
-            <Table
-              columns={tableColumns}
-              dataSource={questionList}
-              pagination={false}
-              rowKey={q => q._id}
-              rowSelection={rowSelection}
-            />
-          </>
-        )}
-      </div>
+      {loading ? (
+        <div>
+          <Spin />
+        </div>
+      ) : (
+        <div className={styles.wrap_content}>
+          {list.length === 0 && <Empty description="暂无数据" />}
+          {list.length > 0 && (
+            <>
+              <div style={{ textAlign: 'left' }}>
+                <Space>
+                  <Button
+                    type="default"
+                    onClick={restore}
+                    loading={loadingBtn}
+                    disabled={selectedRowKeys.length === 0}
+                  >
+                    恢复
+                  </Button>
+                  <Button type="primary" onClick={del} disabled={selectedRowKeys.length === 0}>
+                    彻底删除
+                  </Button>
+                </Space>
+              </div>
+              <Table
+                columns={tableColumns}
+                dataSource={list}
+                pagination={false}
+                rowKey={q => q._id}
+                rowSelection={rowSelection}
+              />
+            </>
+          )}
+        </div>
+      )}
       <div className={styles.wrap_footer}>分页</div>
+      <span>{total}</span>
     </div>
   )
 }
