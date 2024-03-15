@@ -14,9 +14,11 @@ const ListPagination: FC<PropsType> = (props: PropsType) => {
   const onChange = (current: number, pageSize: number) => {
     setCurrent(current)
     setPageSize(pageSize)
+    searchParams.set(List_SEARCH_PARAM_CURRENT, current.toString())
+    searchParams.set(List_SEARCH_PARAM_PAGE_SIZE, pageSize.toString())
     nav({
       pathname: pathname,
-      search: `${List_SEARCH_PARAM_CURRENT}=${current}&&${List_SEARCH_PARAM_PAGE_SIZE}=${pageSize}`,
+      search: searchParams.toString(),
     })
   }
   const [searchParams] = useSearchParams()

@@ -12,9 +12,10 @@ const ListSearch: FC = () => {
 
   // 搜索执行的回调
   const onSearch = (value: string) => {
+    searchParams.set(LIST_SEARCH_PARAM_KEY, value)
     nav({
       pathname: pathname,
-      search: `${LIST_SEARCH_PARAM_KEY}=${value}`,
+      search: searchParams.toString(),
     })
   }
   //输入内容的回调
