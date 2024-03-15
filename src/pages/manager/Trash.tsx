@@ -4,6 +4,7 @@ import styles from './common.module.scss'
 import { Empty, Space, Table, Tag, Button, Modal, message, Spin } from 'antd'
 import ListSearch from '../../components/ListSearch'
 import useLoadingQuestionList from '../../hooks/useLoadingQuestionList'
+import ListPagination from '../../components/ListPagination'
 const { confirm } = Modal
 const Trash: FC = () => {
   const { list, loading, total } = useLoadingQuestionList({ isDeleted: true })
@@ -97,8 +98,9 @@ const Trash: FC = () => {
           )}
         </div>
       )}
-      <div className={styles.wrap_footer}>分页</div>
-      <span>{total}</span>
+      <div className={styles.wrap_footer}>
+        <ListPagination {...{ total }} />
+      </div>
     </div>
   )
 }

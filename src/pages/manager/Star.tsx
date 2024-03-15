@@ -5,6 +5,7 @@ import QuestionCard from '../../components/QuestionCard'
 import { Empty, Spin } from 'antd'
 import ListSearch from '../../components/ListSearch'
 import useLoadingQuestionList from '../../hooks/useLoadingQuestionList'
+import ListPagination from '../../components/ListPagination'
 
 const Star: FC = () => {
   useTitle('我的问卷-星标问卷')
@@ -30,8 +31,9 @@ const Star: FC = () => {
             })}
         </div>
       )}
-      <div className={styles.wrap_footer}>分页</div>
-      <span>{total}</span>
+      <div className={styles.wrap_footer}>
+        <ListPagination {...{ total }} />
+      </div>
     </div>
   )
 }
