@@ -1,9 +1,17 @@
 import React, { FC } from 'react'
 import styles from './Header.module.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LOGIN_PATHNAME } from '../../router'
+import { Button } from 'antd'
+import { removeToken } from '../../utils/user_token'
 
 const UserInfo: FC = () => {
+  const nav = useNavigate()
+  //注销
+  const logoOut = () => {
+    removeToken()
+    nav(LOGIN_PATHNAME)
+  }
   const isLogin = false
   const online = (
     <div className={styles.online}>
@@ -15,6 +23,7 @@ const UserInfo: FC = () => {
         />
       </div>
       <span className={styles.username}>迈克杰瑞</span>
+      <Button onClick={logoOut}>注销</Button>
     </div>
   )
   const leave = (
