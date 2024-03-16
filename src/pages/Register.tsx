@@ -1,17 +1,30 @@
-import { useTitle } from 'ahooks'
-import { Form, Input, Button } from 'antd'
+import { useRequest, useTitle } from 'ahooks'
+import { Form, Input, Button, message } from 'antd'
 import React, { FC } from 'react'
 import { LOGIN_PATHNAME } from '../router'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './Register.module.scss'
 import ValidateTip from '../components/ValidateTip'
+import { userRegister } from '../utils/api/user'
 
 const Register: FC = () => {
   useTitle('幻庐问卷-注册')
-
-  const onFinish = (value: object) => {
-    console.log(value)
+  const nav = useNavigate()
+  const onFinish = (values: any) => {
+    const { username, password, nikename } = values
+    run(username, password, nikename)
   }
+  const { run, loading } = useRequest(
+    async (username: string, password: string, nikename: string) =>
+      await userRegister(username, password, nikename),
+    {
+      manual: true,
+      onSuccess: () => {
+        message.success('注册成功')
+        nav(LOGIN_PATHNAME)
+      },
+    }
+  )
   return (
     <div className={styles.container_wrap}>
       <div>
@@ -92,7 +105,7 @@ const Register: FC = () => {
             <Input />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               注册
             </Button>
             <Link to={LOGIN_PATHNAME}>已有账号？去登陆</Link>

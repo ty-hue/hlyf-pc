@@ -1,9 +1,17 @@
 import { message } from 'antd'
 import axios from 'axios'
+import { getToken } from './user_token'
 
 const instance = axios.create({
   timeout: 10 * 1000,
 })
+instance.interceptors.request.use(
+  config => {
+    config.headers['Authorization'] = `Bearer ${getToken()}`
+    return config
+  },
+  error => Promise.reject(error)
+)
 //对errno msg进行统一处理，并且从res中结构出data进行返回，让数据更纯粹
 instance.interceptors.response.use(res => {
   const resData = (res.data || {}) as ResType
@@ -17,6 +25,7 @@ instance.interceptors.response.use(res => {
     // 后端的锅
     message.error('联系后端开发人员检查bug')
   }
+
   return data as any
 })
 

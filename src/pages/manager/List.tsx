@@ -5,6 +5,7 @@ import QuestionCard from '../../components/QuestionCard'
 import { Empty, Spin } from 'antd'
 import ListSearch from '../../components/ListSearch'
 import useLoadingQuestionList from '../../hooks/useLoadingQuestionList'
+import ListPagination from '../../components/ListPagination'
 // import { useSearchParams } from 'react-router-dom'
 
 const List: FC = () => {
@@ -33,7 +34,9 @@ const List: FC = () => {
         </div>
       )}
       {/* <div className={styles.wrap_footer}>加载中.....</div> */}
-      <span>{total}</span>
+      <div className={styles.wrap_footer}>
+        <ListPagination {...{ total }} />
+      </div>
     </div>
   )
 }

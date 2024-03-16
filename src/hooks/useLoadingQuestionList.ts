@@ -22,8 +22,8 @@ function useLoadingQuestionList(opt: Partial<OptionType>) {
     const data = await getQuestionListService({ keyword, isStar, isDeleted, current, pageSize })
     return data
   }
-  const { data = {}, loading } = useRequest(load, { refreshDeps: [searchParams] })
+  const { data = {}, loading, refresh } = useRequest(load, { refreshDeps: [searchParams] })
   const { list = [], total = 0 } = data
-  return { list, total, loading }
+  return { list, total, loading, refresh }
 }
 export default useLoadingQuestionList

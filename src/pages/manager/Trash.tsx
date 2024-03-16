@@ -1,13 +1,18 @@
-import { useTitle } from 'ahooks'
+import { useRequest, useTitle } from 'ahooks'
 import React, { FC, useState } from 'react'
 import styles from './common.module.scss'
 import { Empty, Space, Table, Tag, Button, Modal, message, Spin } from 'antd'
 import ListSearch from '../../components/ListSearch'
 import useLoadingQuestionList from '../../hooks/useLoadingQuestionList'
 import ListPagination from '../../components/ListPagination'
+import {
+  RecoverManyQuestionListService,
+  delManyQuestionListService,
+} from '../../utils/api/question'
+
 const { confirm } = Modal
 const Trash: FC = () => {
-  const { list, loading, total } = useLoadingQuestionList({ isDeleted: true })
+  const { list, loading, total, refresh } = useLoadingQuestionList({ isDeleted: true })
   const tableColumns = [
     {
       title: '标题',
@@ -29,23 +34,36 @@ const Trash: FC = () => {
     },
   ]
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [loadingBtn, setLoadingBtn] = useState(false)
-  const restore = () => {
-    setLoadingBtn(true)
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([])
-      setLoadingBtn(false)
-    }, 1000)
-  }
+
   const del = () => {
     confirm({
       title: '您确定要删除所选问卷吗？',
       okText: '确定',
       cancelText: '取消',
-      onOk: () => message.success('删除成功'),
+      onOk: () => delRun(),
     })
   }
+  const delMany = async () => await delManyQuestionListService(selectedRowKeys as Array<string>)
+  const { run: delRun } = useRequest(delMany, {
+    manual: true,
+    onSuccess: () => {
+      message.success('删除成功')
+      refresh()
+      setSelectedRowKeys([])
+    },
+  })
+  const { run: recover, loading: loadingBtn } = useRequest(
+    async () => await RecoverManyQuestionListService(selectedRowKeys as Array<string>),
+    {
+      manual: true,
+      onSuccess: () => {
+        message.success('恢复成功')
+        refresh()
+        setSelectedRowKeys([])
+      },
+    }
+  )
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
@@ -63,41 +81,42 @@ const Trash: FC = () => {
           <ListSearch />
         </div>
       </div>
-      {loading ? (
-        <div>
-          <Spin />
-        </div>
-      ) : (
-        <div className={styles.wrap_content}>
-          {list.length === 0 && <Empty description="暂无数据" />}
-          {list.length > 0 && (
-            <>
-              <div style={{ textAlign: 'left' }}>
-                <Space>
-                  <Button
-                    type="default"
-                    onClick={restore}
-                    loading={loadingBtn}
-                    disabled={selectedRowKeys.length === 0}
-                  >
-                    恢复
-                  </Button>
-                  <Button type="primary" onClick={del} disabled={selectedRowKeys.length === 0}>
-                    彻底删除
-                  </Button>
-                </Space>
-              </div>
-              <Table
-                columns={tableColumns}
-                dataSource={list}
-                pagination={false}
-                rowKey={q => q._id}
-                rowSelection={rowSelection}
-              />
-            </>
-          )}
-        </div>
-      )}
+
+      <div className={styles.wrap_content}>
+        {loading && (
+          <div>
+            <Spin />
+          </div>
+        )}
+        {list.length === 0 && <Empty description="暂无数据" />}
+        {list.length > 0 && (
+          <>
+            <div style={{ textAlign: 'left' }}>
+              <Space>
+                <Button
+                  type="default"
+                  onClick={recover}
+                  loading={loadingBtn}
+                  disabled={selectedRowKeys.length === 0}
+                >
+                  恢复
+                </Button>
+                <Button type="primary" onClick={del} disabled={selectedRowKeys.length === 0}>
+                  彻底删除
+                </Button>
+              </Space>
+            </div>
+            <Table
+              columns={tableColumns}
+              dataSource={list}
+              pagination={false}
+              rowKey={q => q._id}
+              rowSelection={rowSelection}
+            />
+          </>
+        )}
+      </div>
+
       <div className={styles.wrap_footer}>
         <ListPagination {...{ total }} />
       </div>

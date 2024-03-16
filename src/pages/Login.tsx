@@ -1,12 +1,14 @@
-import { useTitle } from 'ahooks'
+import { useRequest, useTitle } from 'ahooks'
 import { Form, Input, Button, Checkbox } from 'antd'
 import React, { FC, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { REGISTER_PATHNAME } from '../router'
+import { Link, useNavigate } from 'react-router-dom'
+import { MANAGER_INDEX_PATHNAME, REGISTER_PATHNAME } from '../router'
 import ValidateTip from '../components/ValidateTip'
 import styles from './Login.module.scss'
 import { PASSWORD_KEY, USERNAME_KEY } from '../constant'
-import axios from 'axios'
+import { userLogin } from '../utils/api/user'
+import { setToken } from '../utils/user_token'
+
 const Login: FC = () => {
   useTitle('幻庐问卷-登陆')
   const onFinish = (values: any) => {
@@ -18,7 +20,19 @@ const Login: FC = () => {
       //如果locastorage里面有存在过，就删除
       delLocastorage()
     }
+    run(username, password)
   }
+  const nav = useNavigate()
+  const { loading, run } = useRequest(
+    async (username: string, password: string) => await userLogin(username, password),
+    {
+      manual: true,
+      onSuccess: result => {
+        setToken(result.token)
+        nav(MANAGER_INDEX_PATHNAME)
+      },
+    }
+  )
   const saveLocastorage = (username: string, password: string) => {
     localStorage.setItem(USERNAME_KEY, username)
     localStorage.setItem(PASSWORD_KEY, password)
@@ -37,7 +51,6 @@ const Login: FC = () => {
   }
   const [form] = Form.useForm()
   useEffect(() => {
-    axios.get('/api/test')
     const { username, password } = getLocastorage()
     form.setFieldsValue({ username, password })
   }, [])
@@ -96,7 +109,7 @@ const Login: FC = () => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               登陆
             </Button>
           </Form.Item>
